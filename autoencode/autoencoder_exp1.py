@@ -110,7 +110,7 @@ loss_fn = F.mse_loss
 
 train_losses = []
 test_loses = []
-epochs = 15
+epochs = 2
 batch_size = 16
 
 X_train, X_val = train_test_split(np.array(data, np.float32), train_size=0.8, shuffle=True, random_state=100)

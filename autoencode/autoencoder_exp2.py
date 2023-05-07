@@ -15,7 +15,7 @@ import skimage.io
 from skimage.transform import resize
 import pickle
 from sklearn.model_selection import train_test_split
-from autoencoder_net import Autoencoder
+from autoencoder_net import AutoencoderConv
 
 
 from fetch_dataset import fetch_dataset
@@ -86,10 +86,12 @@ def train(model, loss_fn, epochs, epoch_start, X_tr, X_vl,  scheduler):
     return pd.DataFrame(analysis_dict)
 
 
-encoder = Autoencoder((64, 64, 3), latent_dim=32).to(device=device)
+encoder = AutoencoderConv(latent_dim=32).to(device=device)
 #1 - Установить FIRST = TRUE -если сеть только начинает обучатся
-FIRST = True
-net_name = "ae32"
+FIRST = False
+
+net_name = "ae_conv_32"
+batch_size = 16
 
 if FIRST:
     epoch_start = 0
@@ -104,14 +106,15 @@ else:
 
 
 
-optimizator = optim.AdamW(encoder.parameters(), lr=0.0001, weight_decay=0.05)
-scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizator, milestones=[5], gamma=0.2)
+#optimizator = optim.AdamW(encoder.parameters(), lr=0.0001, weight_decay=0.05)
+optimizator = optim.Adam(encoder.parameters(), lr=0.00001)
+scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizator, milestones=[15,40], gamma=0.2)
 loss_fn = F.mse_loss
 
 train_losses = []
 test_loses = []
-epochs = 15
-batch_size = 16
+epochs = 20
+
 
 X_train, X_val = train_test_split(np.array(data, np.float32), train_size=0.8, shuffle=True, random_state=100)
 X_tr = DataLoader(X_train, batch_size=batch_size)
