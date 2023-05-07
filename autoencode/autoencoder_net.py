@@ -80,5 +80,5 @@ class AutoencoderConv(nn.Module):
         latent = self.encoder_lin(x2)
         x3 = self.decoder_lin(latent)
         x4 = self.decoder_unpool(x3, pool_indices)
-        reconstracted = self.decoder_sigmoid(self.decoder_unconv1(self.decoder_unconv0(x4)))
+        reconstracted = self.decoder_unconv1(self.decoder_unconv0(x4))
         return torch.permute(reconstracted, (0, 2, 3, 1)), latent

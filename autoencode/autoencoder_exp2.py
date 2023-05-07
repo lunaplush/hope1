@@ -43,7 +43,7 @@ device = ("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 
-def train(model, loss_fn, epochs, epoch_start, X_tr, X_vl,  scheduler):
+def train(model, loss_fn, epochs, epoch_start, X_tr, X_vl,  scheduler, optimizator):
     analysis_dict = {"loss_train": [], "loss_val": []}
     next_epoch_num = epoch_start
     for epoch in range(epochs):
@@ -54,6 +54,8 @@ def train(model, loss_fn, epochs, epoch_start, X_tr, X_vl,  scheduler):
             optimizator.zero_grad()
             x_rec, x_lat = encoder(x)
             loss = loss_fn(x, x_rec)
+             #print(loss)
+            #print(x_rec[0][0])
 
             loss.backward()
             optimizator.step()
@@ -88,7 +90,7 @@ def train(model, loss_fn, epochs, epoch_start, X_tr, X_vl,  scheduler):
 
 encoder = AutoencoderConv(latent_dim=32).to(device=device)
 #1 - Установить FIRST = TRUE -если сеть только начинает обучатся
-FIRST = False
+FIRST = True
 
 net_name = "ae_conv_32"
 batch_size = 16
@@ -113,7 +115,7 @@ loss_fn = F.mse_loss
 
 train_losses = []
 test_loses = []
-epochs = 20
+epochs = 2
 
 
 X_train, X_val = train_test_split(np.array(data, np.float32), train_size=0.8, shuffle=True, random_state=100)
@@ -121,7 +123,7 @@ X_tr = DataLoader(X_train, batch_size=batch_size)
 X_vl = DataLoader(X_val, batch_size=batch_size)
 work_path = os.getcwd()
 os.chdir(net_name+"_epochs")
-analysis_data = train(encoder, loss_fn, epochs, epoch_start, X_tr, X_vl, scheduler)
+analysis_data = train(encoder, loss_fn, epochs, epoch_start, X_tr, X_vl, scheduler, optimizator)
 os.chdir(work_path)
 torch.save(encoder.state_dict(), net_name + ".net")
 
