@@ -92,7 +92,7 @@ encoder = AutoencoderConv(latent_dim=32).to(device=device)
 #1 - Установить FIRST = TRUE -если сеть только начинает обучатся
 FIRST = True
 
-net_name = "ae_conv_32"
+net_name = "ae_conv_32d"
 batch_size = 16
 
 if FIRST:
@@ -109,13 +109,13 @@ else:
 
 
 #optimizator = optim.AdamW(encoder.parameters(), lr=0.0001, weight_decay=0.05)
-optimizator = optim.Adam(encoder.parameters(), lr=0.00001)
+optimizator = optim.Adam(encoder.parameters(), lr=0.0001)
 scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizator, milestones=[15,40], gamma=0.2)
 loss_fn = F.mse_loss
 
 train_losses = []
 test_loses = []
-epochs = 2
+epochs = 200
 
 
 X_train, X_val = train_test_split(np.array(data, np.float32), train_size=0.8, shuffle=True, random_state=100)

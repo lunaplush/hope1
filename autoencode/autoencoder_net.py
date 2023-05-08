@@ -43,10 +43,12 @@ class AutoencoderConv(nn.Module):
         super().__init__()
         self.encoder_conv0 = nn.Sequential(
             nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.ReLU()
         )
         self.encoder_conv1 = nn.Sequential(
             nn.Conv2d(16, 32, kernel_size=3, stride=2, padding=1, bias=False),
+            nn.BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.ReLU()
         )
         self.encoder_pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0, return_indices=True, ceil_mode=True)
@@ -61,13 +63,15 @@ class AutoencoderConv(nn.Module):
         )
         self.decoder_unpool = nn.MaxUnpool2d(kernel_size=2, stride=2, padding=0)
         self.decoder_unconv0 = nn.Sequential(
-            #nn.Dropout(0.2),
+            nn.Dropout(0.2),
             nn.ConvTranspose2d(32, 16, kernel_size=2, stride=2, padding=0, bias=False),
+            nn.BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.ReLU(),
         )
         self.decoder_unconv1 = nn.Sequential(
-            #nn.Dropout(0.2),
+            nn.Dropout(0.2),
             nn.ConvTranspose2d(16, 3, kernel_size=2, stride=2, padding=0, bias=False),
+            nn.BatchNorm2d(3, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.ReLU(),
         )
         self.decoder_sigmoid = nn.Sigmoid()
