@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-
 class Autoencoder(nn.Module):
     def __init__(self, input_dim, latent_dim):
         super().__init__()
@@ -31,12 +30,6 @@ class Autoencoder(nn.Module):
 
     def decode(self, latent):
         return self.decoder(latent)
-
-
-
-
-
-
 
 class AutoencoderConv(nn.Module):
     def __init__(self, latent_dim=50):

@@ -90,9 +90,9 @@ def train(model, loss_fn, epochs, epoch_start, X_tr, X_vl,  scheduler, optimizat
 
 encoder = AutoencoderConv(latent_dim=32).to(device=device)
 #1 - Установить FIRST = TRUE -если сеть только начинает обучатся
-FIRST = True
+FIRST = False
 
-net_name = "ae_conv_32d"
+net_name = "ae_conv_32"
 batch_size = 16
 
 if FIRST:
@@ -115,7 +115,7 @@ loss_fn = F.mse_loss
 
 train_losses = []
 test_loses = []
-epochs = 200
+epochs = 20
 
 
 X_train, X_val = train_test_split(np.array(data, np.float32), train_size=0.8, shuffle=True, random_state=100)
